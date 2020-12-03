@@ -13,8 +13,14 @@ class Entry extends Model
     ];
 
     protected $casts = [
-        //'entry' => 'array',
+        'entry' => 'array',
     ];
+
+    // scope
+    public function scopeOwnedByUser($query)
+    {
+        return $query->where('created_by', auth()->user()->id);
+    }
 
     // relationships
     public function user()

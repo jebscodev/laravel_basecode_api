@@ -12,7 +12,7 @@ curl -X POST 'http://127.0.0.1:8000/api/login/' \
 -H 'Content-Type: application/json' \
 -H 'X-Requested-With: XMLHttpRequest' \
 -d '{
-"email": "admin@test.com",
+"email": "user1@test.com",
 "password": "test12345"
 }'
 
@@ -36,3 +36,13 @@ curl -X POST 'http://127.0.0.1:8000/api/entries/' \
 "serviceTimeElapsed": "2",
 "totalCost": "1250"
 }'
+
+curl -X GET 'http://127.0.0.1:8000/api/entries/2' \
+-H 'Content-Type: application/json' \
+-H 'X-Requested-With: XMLHttpRequest' \
+-H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYTc0Mjc4MDRkYzY2OWI0YmZjYmZmZjI1OGRlMTFlNWNkNTljOWM3MjI0MTI2NTFkZTIwOWVhN2I5ODVmMDM2YjhmYjIwNjI2ZWVmNjYzZDMiLCJpYXQiOjE2MDY5NTEwODUsIm5iZiI6MTYwNjk1MTA4NSwiZXhwIjoxNjM4NDg3MDg1LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.muoz6OzddielVL2wbZA4qKJKXfTslVWa07gtWZ4Vcan8DiTX3_cS-wlD8a4Vu48J9y8rqSE2tVE-mzATh-HAFONxlRE-wMbCVOxdEfq2boVMho6ZxwT4OV3hUg9d7-Sqw5wUlptY1IkbZQ7-8Dz-LV5a_dIFBVOQNdmlHJ3DphSWHP7vzP_7IIc9jE8pcRaHAWX2dRGUQTlDMoVMqgp0cCkPW6jxJWwxjopxmJL1j9Qv7xK9_0C0GTU7wBvw0O-pHmzz15t8i0qTlgi3_s4yp0iQafEpdavrRkVSFKjDZeEoOUqqsb88GSviiJkYAfwez4DKCAmBNGhzeWgs8iGywjb43CdqWVxC30jyM99Ka8nAQn_T3DqCQajp-W6cYo7qrJw1tXQGqqK667L5a90Lu955g4vacgOjzhQB5RYoZU18Glx-ieuFCyly2YUu97N_jSUZsSPKVMjzVUv7bHHTI18a5BVLjC21aA_EaqphpUsT28KcIg6g9wqjBzq-sGe3pNli563BxLe1qI8E7aop0QLOMZ4wvp53c906IUpT9Cjl_6DlVYylyHND6baMEOrGmRB7H8pBvxa9K-8LXc3ITdyz4L9IxPjyhZEOVKndmngXH36A3rLitTHKdLSjQxquBWTISHqrKew60wJ1G7ijCtRjrU0bXLUR11NYOZ5nrBs'
+
+curl -X DELETE 'http://127.0.0.1:8000/api/entries/5' \
+-H 'Content-Type: application/json' \
+-H 'X-Requested-With: XMLHttpRequest' \
+-H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYTc0Mjc4MDRkYzY2OWI0YmZjYmZmZjI1OGRlMTFlNWNkNTljOWM3MjI0MTI2NTFkZTIwOWVhN2I5ODVmMDM2YjhmYjIwNjI2ZWVmNjYzZDMiLCJpYXQiOjE2MDY5NTEwODUsIm5iZiI6MTYwNjk1MTA4NSwiZXhwIjoxNjM4NDg3MDg1LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.muoz6OzddielVL2wbZA4qKJKXfTslVWa07gtWZ4Vcan8DiTX3_cS-wlD8a4Vu48J9y8rqSE2tVE-mzATh-HAFONxlRE-wMbCVOxdEfq2boVMho6ZxwT4OV3hUg9d7-Sqw5wUlptY1IkbZQ7-8Dz-LV5a_dIFBVOQNdmlHJ3DphSWHP7vzP_7IIc9jE8pcRaHAWX2dRGUQTlDMoVMqgp0cCkPW6jxJWwxjopxmJL1j9Qv7xK9_0C0GTU7wBvw0O-pHmzz15t8i0qTlgi3_s4yp0iQafEpdavrRkVSFKjDZeEoOUqqsb88GSviiJkYAfwez4DKCAmBNGhzeWgs8iGywjb43CdqWVxC30jyM99Ka8nAQn_T3DqCQajp-W6cYo7qrJw1tXQGqqK667L5a90Lu955g4vacgOjzhQB5RYoZU18Glx-ieuFCyly2YUu97N_jSUZsSPKVMjzVUv7bHHTI18a5BVLjC21aA_EaqphpUsT28KcIg6g9wqjBzq-sGe3pNli563BxLe1qI8E7aop0QLOMZ4wvp53c906IUpT9Cjl_6DlVYylyHND6baMEOrGmRB7H8pBvxa9K-8LXc3ITdyz4L9IxPjyhZEOVKndmngXH36A3rLitTHKdLSjQxquBWTISHqrKew60wJ1G7ijCtRjrU0bXLUR11NYOZ5nrBs'

@@ -15,6 +15,7 @@ class Entry extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'entry' => $this->entry,
         ];
     }
