@@ -13,6 +13,7 @@ class Entry extends Model
     ];
 
     protected $casts = [
+        'id' => 'string',
         'entry' => 'array',
     ];
 

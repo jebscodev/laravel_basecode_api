@@ -10,8 +10,6 @@ use App\Http\Requests\StoreEntry;
 use App\Http\Resources\Entry as EntryResource;
 use App\Entry;
 
-// TO DO: return proper and standard http codes
-
 class EntryController extends Controller
 {
     /**
@@ -22,25 +20,14 @@ class EntryController extends Controller
      */
     public function index()
     {
-        // try {
-        //     return EntryResource::collection(
-        //         Entry::ownedByUser()->get()
-        //     );
-        // } catch (ModelNotFoundException $e) {
-        //     return response([
-        //         'message' => Constant::MSG_NO_DATA
-        //     ]);
-        // }
+        $result = EntryResource::collection(Entry::ownedByUser()->get());
 
-        $entries = EntryResource::collection(Entry::ownedByUser()->get());
-
-        if (count($entries) <= 1) {
-            return response([
-                'message' => Constant::MSG_NO_DATA
-            ], 204);
+        if (count($result) <= 1) {
+            // content param is ignored if 204 No Content
+            return response([], Constant::HTTP_CODE_NO_CONTENT);
         }
 
-        return $entries;
+        return $result;
     }
 
     /**

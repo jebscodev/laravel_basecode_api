@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Constants as Constant;
 use App\User;
 
 class AuthController extends Controller
@@ -33,7 +34,12 @@ class AuthController extends Controller
         ]);
 
         if (!auth()->attempt($loginData)) {
-            return response(['message' => 'Invalid Credentials']);
+            return response(
+                [
+                    'message' => 'Invalid Credentials'
+                ],
+                Constant::HTTP_CODE_UNAUTHORIZED
+            );
         }
 
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
