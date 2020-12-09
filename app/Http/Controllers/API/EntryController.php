@@ -4,11 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Constants as Constant;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreEntry;
 use App\Http\Resources\Entry as EntryResource;
+use App\Constants as Constant;
 use App\Entry;
+use Illuminate\Database\Events\QueryExecuted;
 
 class EntryController extends Controller
 {
@@ -20,14 +21,18 @@ class EntryController extends Controller
      */
     public function index()
     {
-        $result = EntryResource::collection(Entry::ownedByUser()->get());
-
-        if (count($result) <= 1) {
-            // content param is ignored if 204 No Content
-            return response([], Constant::HTTP_CODE_NO_CONTENT);
+        try {
+            return EntryResource::collection(
+                Entry::ownedByUser()->get()
+            );
+        } catch (QueryException $e) {
+            return response(
+                [
+                    'message' => Constant::MSG_DB_ERROR
+                ],
+                Constant::HTTP_CODE_SERVER_ERROR
+            );
         }
-
-        return $result;
     }
 
     /**
@@ -40,14 +45,26 @@ class EntryController extends Controller
     {
         // removed request validation
         // as the whole payload will be stored as json
-        $entry = new Entry();
-        $entry->entry = $request->all();
-        $entry->created_by = auth()->user()->id;
-        $entry->save();
+        try {
+            $entry = new Entry();
+            $entry->entry = $request->all();
+            $entry->created_by = auth()->user()->id;
+            $entry->save();
 
-        return response([
-            'message' => Constant::MSG_ADD_SUCCESS
-        ]);
+            return response(
+                [
+                    'message' => Constant::MSG_ADD_SUCCESS
+                ],
+                Constant::HTTP_CODE_CREATED
+            );
+        } catch (QueryException $e) {
+            return response(
+                [
+                    'message' => Constant::MSG_DB_ERROR
+                ],
+                Constant::HTTP_CODE_SERVER_ERROR
+            );
+        }
     }
 
     /**
@@ -63,9 +80,21 @@ class EntryController extends Controller
                 Entry::ownedByUser()->findOrFail($id)
             );
         } catch (ModelNotFoundException $e) {
-            return response([
-                'message' => Constant::MSG_NO_DATA
-            ]);
+            // catch if no matching ID
+            return response(
+                [
+                    'message' => Constant::MSG_NO_DATA_MATCH
+                ],
+                Constant::HTTP_CODE_NOT_FOUND
+            );
+        } catch (QueryException $e) {
+            // catch query errors
+            return response(
+                [
+                    'message' => Constant::MSG_DB_ERROR
+                ],
+                Constant::HTTP_CODE_SERVER_ERROR
+            );
         }
     }
 
@@ -80,18 +109,28 @@ class EntryController extends Controller
     {
         try {
             $entry = Entry::ownedByUser()->findOrFail($id);
+            $entry->entry = json_encode($request->all());
+            $entry->save();
+
+            // successfully updated
+            return response([], Constant::HTTP_CODE_NO_CONTENT);
         } catch (ModelNotFoundException $e) {
-            return response([
-                'message' => Constant::MSG_NO_DATA_MATCH
-            ]);
+            // catch if no matching ID
+            return response(
+                [
+                    'message' => Constant::MSG_NO_DATA_MATCH
+                ],
+                Constant::HTTP_CODE_NOT_FOUND
+            );
+        } catch (QueryException $e) {
+            // catch query errors
+            return response(
+                [
+                    'message' => Constant::MSG_DB_ERROR
+                ],
+                Constant::HTTP_CODE_SERVER_ERROR
+            );
         }
-
-        $entry->entry = json_encode($request->all());
-        $entry->save();
-
-        return response([
-            'message' => Constant::MSG_EDIT_SUCCESS
-        ]);
     }
 
     /**
@@ -104,15 +143,26 @@ class EntryController extends Controller
     {
         try {
             $entry = Entry::ownedByUser()->findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            return response([
-                'message' => Constant::MSG_NO_DATA_MATCH
-            ]);
-        }
+            $entry->delete();
 
-        $entry->delete();
-        return response([
-            'message' => Constant::MSG_DEL_SUCCESS
-        ]);
+            // successfully deleted
+            return response([], Constant::HTTP_CODE_NO_CONTENT);
+        } catch (ModelNotFoundException $e) {
+            // catch if no matching ID
+            return response(
+                [
+                    'message' => Constant::MSG_NO_DATA_MATCH
+                ],
+                Constant::HTTP_CODE_NOT_FOUND
+            );
+        } catch (QueryException $e) {
+            // catch query errors
+            return response(
+                [
+                    'message' => Constant::MSG_DB_ERROR
+                ],
+                Constant::HTTP_CODE_SERVER_ERROR
+            );
+        }
     }
 }
