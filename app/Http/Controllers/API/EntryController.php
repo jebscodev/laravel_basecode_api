@@ -26,7 +26,7 @@ class EntryController extends Controller
                 Entry::ownedByUser()->get()
             );
         } catch (QueryException $e) {
-            return response(
+            return response()->json(
                 [
                     'message' => Constant::MSG_DB_ERROR
                 ],
