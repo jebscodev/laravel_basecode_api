@@ -4,33 +4,28 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Entry extends Model
+class Car extends Model
 {
     // variables
     protected $fillable = [
-        'entry',
-        'created_by'
+        'details',
+        'created_by',
     ];
 
     protected $casts = [
         'id' => 'string',
-        'entry' => 'array',
+        'details' => 'array',
     ];
 
-    // scope
+    // scopes
     public function scopeOwnedByUser($query)
     {
         return $query->where('created_by', auth()->user()->id);
     }
 
     // relationships
-    public function user()
+    public function entries()
     {
-        return $this->belongsTo('App\User');
-    }
-
-    public function car()
-    {
-        return $this->belongsTo('App\Car');
+        return $this->hasMany('App\Entry');
     }
 }
