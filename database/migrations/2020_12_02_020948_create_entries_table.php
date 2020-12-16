@@ -17,6 +17,7 @@ class CreateEntriesTable extends Migration
             $table->id();
             $table->text('entry'); // will store json
             $table->integer('created_by');
+            $table->integer('car_id');
             $table->timestamps();
         });
     }
