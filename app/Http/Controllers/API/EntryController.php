@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Entry as EntryResource;
 use App\Constants as Constant;
 use App\Entry;
-use Illuminate\Database\Events\QueryExecuted;
+use App\Car;
+use App\User;
 
 class EntryController extends Controller
 {
@@ -19,11 +20,11 @@ class EntryController extends Controller
      * @return \Illuminate\Http\Response
      * returns an array of Entry objects
      */
-    public function index()
+    public function index($car)
     {
         try {
             return EntryResource::collection(
-                Entry::ownedByUser()->get()
+                Entry::ofCar($car)->get()
             );
         } catch (QueryException $e) {
             return response()->json(
@@ -41,7 +42,7 @@ class EntryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $car)
     {
         // removed request validation
         // as the whole payload will be stored as json
@@ -49,6 +50,7 @@ class EntryController extends Controller
             $entry = new Entry();
             $entry->entry = $request->all();
             $entry->created_by = auth()->user()->id;
+            $entry->car_id = $car;
             $entry->save();
 
             return response(
@@ -73,11 +75,11 @@ class EntryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($car, $entry)
     {
         try {
             return new EntryResource(
-                Entry::ownedByUser()->findOrFail($id)
+                Entry::ofCar($car)->findOrFail($entry)
             );
         } catch (ModelNotFoundException $e) {
             // catch if no matching ID
@@ -105,10 +107,10 @@ class EntryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $car, $entry)
     {
         try {
-            $entry = Entry::ownedByUser()->findOrFail($id);
+            $entry = Entry::ofCar($car)->findOrFail($entry);
             $entry->entry = json_encode($request->all());
             $entry->save();
 
@@ -139,10 +141,10 @@ class EntryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($car, $entry)
     {
         try {
-            $entry = Entry::ownedByUser()->findOrFail($id);
+            $entry = Entry::ofCar($car)->findOrFail($entry);
             $entry->delete();
 
             // successfully deleted

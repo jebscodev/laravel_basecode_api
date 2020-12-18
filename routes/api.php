@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', 'Api\AuthController@register');
 Route::post('/login', 'Api\AuthController@login');
 
-Route::middleware('auth:api')->apiResource('/entries', 'Api\EntryController');
 Route::middleware('auth:api')->apiResource('/cars', 'Api\CarController');
+Route::middleware(['auth:api', 'carowner'])->apiResource('/cars/{car}/entries', 'Api\EntryController');
 
 Route::middleware('auth:api')->get('/logout', 'Api\AuthController@logout');
 Route::middleware('auth:api')->get('/user', function (Request $request) {

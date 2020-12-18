@@ -9,7 +9,8 @@ class Entry extends Model
     // variables
     protected $fillable = [
         'entry',
-        'created_by'
+        'created_by',
+        'car_id'
     ];
 
     protected $casts = [
@@ -18,17 +19,12 @@ class Entry extends Model
     ];
 
     // scope
-    public function scopeOwnedByUser($query)
+    public function scopeOfCar($query, $car)
     {
-        return $query->where('created_by', auth()->user()->id);
+        return $query->where('car_id', $car);
     }
 
     // relationships
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
-
     public function car()
     {
         return $this->belongsTo('App\Car');

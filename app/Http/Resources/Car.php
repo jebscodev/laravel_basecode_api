@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Entry as EntryResource;
 
 class Car extends JsonResource
 {
@@ -17,6 +18,7 @@ class Car extends JsonResource
         return [
             'id' => $this->id,
             'details' => $this->details,
+            'entries' => EntryResource::collection($this->entries),
         ];
     }
 }
