@@ -10,7 +10,6 @@ use App\Http\Resources\Entry as EntryResource;
 use App\Constants as Constant;
 use App\Entry;
 use App\Car;
-use App\User;
 
 class EntryController extends Controller
 {
@@ -25,6 +24,7 @@ class EntryController extends Controller
         try {
             return EntryResource::collection(
                 Entry::ofCar($car)->get()
+                // Car::find($car)->entries()->get() // creates n+1
             );
         } catch (QueryException $e) {
             return response()->json(
